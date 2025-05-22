@@ -17,9 +17,10 @@ $result = mysqli_query($conn, $query);
 </head>
 <body>
     <h2>TAMBAH PRODUK</h2>
-        <a href="form.php">
+    <a href="form.php">
         <button>Tambah Produk Baru</button>
     </a>
+
     <h2>Filter Produk Berdasarkan Kategori</h2>
     <form method="GET" action="">
         <label for="kategori">Kategori:</label>
@@ -35,6 +36,8 @@ $result = mysqli_query($conn, $query);
                 Harga: <?= htmlspecialchars($row['harga']) ?><br>
                 Deskripsi: <?= htmlspecialchars($row['deskripsi']) ?><br>
                 Kategori: <?= htmlspecialchars($row['kategori']) ?><br>
+                <a href="update.php?id=<?= $row['id'] ?>">Edit</a> |
+                <a href="delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin menghapus produk ini?')">Hapus</a>
             </li>
         <?php endwhile; ?>
     </ul>
