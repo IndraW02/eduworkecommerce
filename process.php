@@ -1,25 +1,28 @@
 <?php
 include 'db.php';
 
-$nama = $_POST['nama'] ?? '';
-$harga = $_POST['harga'] ?? '';
-$deskripsi = $_POST['deskripsi'] ?? '';
+// Validasi sederhana
+if (
+    !empty($_POST['nama']) &&
+    !empty($_POST['harga']) &&
+    !empty($_POST['deskripsi']) &&
+    !empty($_POST['kategori'])
+) {
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $harga = mysqli_real_escape_string($conn, $_POST['harga']);
+    $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi']);
+    $kategori = mysqli_real_escape_string($conn, $_POST['kategori']);
 
-if (empty($nama) || empty($harga) || empty($deskripsi)) {
-    echo "Semua field harus diisi. <a href='form.php'>Kembali</a>";
-    exit;
-}
+    $query = "INSERT INTO products (nama_produk, harga, deskripsi, kategori)
+              VALUES ('$nama', '$harga', '$deskripsi', '$kategori')";
 
-$sql = "INSERT INTO products (nama_produk, harga, deskripsi, stok) VALUES (?, ?, ?, 0)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("sis", $nama, $harga, $deskripsi);
-
-if ($stmt->execute()) {
-    echo "Produk berhasil ditambahkan.";
+    if (mysqli_query($conn, $query)) {
+        header("Location: index.php");
+        exit;
+    } else {
+        echo "Gagal menyimpan data: " . mysqli_error($conn);
+    }
 } else {
-    echo "Gagal menambahkan produk: " . $conn->error;
+    echo "Semua field wajib diisi.";
 }
-
-$stmt->close();
-$conn->close();
 ?>
